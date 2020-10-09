@@ -2,14 +2,23 @@ package com.jerrwu.yomikatawa
 
 import android.animation.AnimatorInflater
 import android.animation.LayoutTransition
+import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 
 class MainActivity : AppCompatActivity() {
@@ -70,5 +79,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         search_edit_text.clearFocus()
+        fetchYomikata(text)
+    }
+
+    @SuppressLint("CheckResult")
+    private fun fetchYomikata(string: String) {
+        progress.visibility = View.VISIBLE
+        Single.fromCallable{
+            val encoded = Uri.encode(string)
+            val doc = Jsoup.connect("https://yomikatawa.com/kanji/$encoded?search=1").get()
+            return@fromCallable doc
+        }
+        .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { html: Document ->
+                val kana = html.body()
+                    .getElementById("content")
+                    .getElementsByTag("p")[0]
+                    .text()
+                kanaRetrieved(kana)
+            }
+    }
+
+    private fun kanaRetrieved(kana: String) {
+        kana_text.text = kana
+        progress.visibility = View.GONE
     }
 }
