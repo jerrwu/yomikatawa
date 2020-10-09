@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/colorMain</color>
+    <color name="colorAccent">#4285F4</color>
+    <color name="colorMain">#FBFBFB</color>
+    <color name="colorText">#131313</color>
+    <color name="colorSecondary">#606060</color>
+    <color name="bottomNavColor">#FBFBFB</color>
+    <color name="colorFont">#131313</color>
+    <color name="colorButton">#FFFFFF</color>
+    <color name="colorTertiary">#AEAEAE</color>
+    <color name="colorQuad">#E7E7E7</color>
+    <color name="colorSelect">#254285F4</color>
+    <color name="blue">#4285F4</color>
+    <color name="red">#DB4437</color>
+    <color name="green">#0F9D58</color>
+    <color name="purple">#5E35B1</color>
+    <color name="yellow">#F4B400</color>
+    <color name="black">@android:color/black</color>
+    <color name="white">#F0F0F0</color>
+    <color name="colorSplash">#343434</color>
+</resources>
