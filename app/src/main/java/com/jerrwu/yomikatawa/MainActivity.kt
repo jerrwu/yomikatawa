@@ -68,6 +68,8 @@ class MainActivity : AppCompatActivity() {
     private fun onTextEntered(){
         val text = StringHelper.nullToEmpty(search_edit_text.text.toString())
 
+        if (text.isEmpty()) return
+
         if (StringHelper.hasAlphaNumbers(text)) {
             Toast.makeText(this, R.string.alpha_number_error, Toast.LENGTH_LONG).show()
             return
@@ -90,19 +92,30 @@ class MainActivity : AppCompatActivity() {
             val doc = Jsoup.connect("https://yomikatawa.com/kanji/$encoded?search=1").get()
             return@fromCallable doc
         }
-        .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { html: Document ->
-                val kana = html.body()
-                    .getElementById("content")
-                    .getElementsByTag("p")[0]
-                    .text()
-                kanaRetrieved(kana)
-            }
+            .onErrorReturn { Document("") }
+            .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { html: Document ->
+                    if (html.baseUri().isEmpty()) {
+                        fetchError()
+                        return@subscribe
+                    }
+
+                    val kana = html.body()
+                        .getElementById("content")
+                        .getElementsByTag("p")[0]
+                        .text()
+                    kanaRetrieved(kana)
+                }
     }
 
     private fun kanaRetrieved(kana: String) {
         kana_text.text = kana
+        progress.visibility = View.GONE
+    }
+
+    private fun fetchError() {
+        Toast.makeText(this, R.string.not_found_error, Toast.LENGTH_LONG).show()
         progress.visibility = View.GONE
     }
 }

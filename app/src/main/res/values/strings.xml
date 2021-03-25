@@ -3,4 +3,5 @@
     <string name="edit_text_hint">テキストを入力</string>
     <string name="alpha_number_error">アルファベットか数字を含めることはできません</string>
     <string name="no_kanji_error">漢字を含めてください</string>
+    <string name="not_found_error">見つかりませんでした</string>
 </resources>
